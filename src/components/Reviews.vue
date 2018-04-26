@@ -1,16 +1,35 @@
 <template>
 <div>
-  <section class="hero is-primary">
+  <section class="hero">
       <div class="hero-body">
         <div class="container">
-          <p class="title">avaliações</p> <p class="subtitle">cervejas de todo brasil</p>
+          
+          <router-link class="button is-primary" to="/new-review">adicionar avaliação</router-link>
         </div>
       </div>
       
     </section>
-    <section class="container">
-      <div class="columns">
-        <div class="column is-one-third" v-for="review in reviews" v-bind:key="review['.key']">
+  <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <p class="title">todas avaliações</p> <p class="subtitle">cervejas de todo brasil</p>
+        </div>
+      </div>
+      
+    </section>
+    <section class="container is-fluid">
+      <div class="columns is-multiline">
+        <div class="column is-one-quarter-desktop review" v-for="review in reviews" v-bind:key="review['.key']">
+          <div class="beer-img" :style="{ backgroundImage: `url('${review.image}')` }"></div>
+          
+          <p class="subtitle">{{review.beer}}</p>
+          <p class="subtitle">{{review.coment}}</p>
+          <star-rating :inline="true" :star-size="20" :read-only="true" :show-rating="false" v-model="review.rating"></star-rating> {{review.rating}}
+        </div>
+
+
+
+        <!-- <div class="column is-one-third" >
 
           <article class="tile is-child notification">
           <p class="title">{{review.beer}}</p>
@@ -18,44 +37,35 @@
           <figure class="image is-4by3">
            <img :src="review.image" alt="Placeholder image">
           </figure>
-        </article>
+        </article> -->
           
-        </div>
+        
       </div>
     </section>
-    <section class="container">
-      <table class="table is-narrow is-hoverable is-fullwidth">
-        <thead>
-          <tr>
-            <th>nome</th>
-            <th>cervejaria</th>
-            <th>ação</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="review in reviews" v-bind:key="review['.key']">
-            <td>{{ review.beer }}</td>
-            <td>{{ review.rating }}</td>
-            <td>
-              <a v-on:click="removeReview(review)" class="delete is-medium"></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-    <section class="hero is-primary">
-      <div class="hero-body">
-        <div class="container">
-          <p class="title">avaliações</p> <p class="subtitle">avaliações</p>
-          <router-link class="button is-primary is-inverted" to="/new-review">adicionar avaliação</router-link>
-        </div>
-      </div>
-      
-    </section>
+    
   </div>
 </template>
+
+
+
+<style scoped>
+.review {
+  margin-top: 30px;
+  background-color: hsl(0, 0%, 98%);
+}
+
+.beer-img {
+  height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+</style>
+
+
 <script>
 import { db } from '../firebase/';
+import StarRating from 'vue-star-rating';
 
 /*\
 pastas firebase
@@ -81,6 +91,9 @@ export default {
         this.$firebaseRefs.reviews.child(review['.key']).remove();
       }
     }
+  },
+  components: {
+    StarRating
   }
 };
 </script>

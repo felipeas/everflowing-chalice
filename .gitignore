@@ -18,3 +18,4 @@ config/dev.env.js
 *.ntvs*
 *.njsproj
 *.sln
+config/dev.env.js

@@ -41,6 +41,7 @@
 </template>
 <script>
 import firebase, { db } from '../firebase/';
+import StarRating from 'vue-star-rating';
 
 export default {
   name: 'beers',

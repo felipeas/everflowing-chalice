@@ -139,6 +139,7 @@ export default {
         .then(imageUp => {
           const image = imageUp.metadata.downloadURLs[0];
           reviewsRef.child(key).update({ image: image });
+          this.$router.replace('reviews');
         });
 
       this.review.name = '';
