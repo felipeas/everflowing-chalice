@@ -28,19 +28,20 @@ export default {
     };
   },
   methods: {
-    signIn: function() {
+    signIn() {
       const comp = this;
-      debugger;
+
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           user => {
             console.log(user);
-            this.$router.replace('beers');
+            this.$toast.open('Entrou');
+            this.$router.replace('reviews');
           },
           err => {
-            comp.$toast('Oops. ' + err.message);
+            this.$toast.open('Oops. ' + err.message);
           }
         );
     }
