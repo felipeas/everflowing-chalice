@@ -72,7 +72,8 @@ export default {
         comment: '',
         rating: 0,
         uid: '',
-        image: null
+        image: null,
+        date: new Date().getTime()
       },
       beer: '',
       selected: null,
@@ -117,7 +118,8 @@ export default {
         comment: this.review.comment,
         beer: this.review.beer,
         bid: this.selected.key,
-        uid: firebase.auth().currentUser.uid
+        uid: firebase.auth().currentUser.uid,
+        date: new Date().getTime()
       };
 
       const img = this.image;

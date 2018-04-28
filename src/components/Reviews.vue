@@ -1,49 +1,56 @@
 <template>
 <div>
   <section class="hero">
-      <div class="hero-body">
-        <div class="container">
-          
-          <router-link class="button is-primary" to="/new-review">adicionar avaliação</router-link>
-        </div>
+    <div class="hero-body">
+      <div class="container">
+        <router-link class="button is-primary" to="/new-review">adicionar avaliação</router-link>
       </div>
-      
-    </section>
+    </div>    
+  </section>
   <section class="hero is-primary">
-      <div class="hero-body">
-        <div class="container">
-          <p class="title">todas avaliações</p> <p class="subtitle">cervejas de todo brasil</p>
-        </div>
+    <div class="hero-body">
+      <div class="container">
+        <p class="title">todas avaliações</p> <p class="subtitle">cervejas de todo brasil</p>
       </div>
-      
-    </section>
-    <section class="container is-fluid">
-      <div class="columns is-multiline">
-        <div class="column is-one-quarter-desktop review" v-for="review in reviews" v-bind:key="review['.key']">
-          <div class="beer-img" :style="{ backgroundImage: `url('${review.image}')` }"></div>
-          
-          <p class="subtitle">{{review.beer}}</p>
-          <p class="subtitle">{{review.coment}}</p>
+    </div>
+  </section>
+  <section class="container is-fluid">
+    <div class="columns is-multiline">
+        <div
+          class="column is-one-quarter-desktop review" 
+          v-for="review in reviews" 
+          v-bind:key="review['.key']"
+          v-on:click="loadComments(review)"
+        >
+          <div class="review-beer-img" :style="{ backgroundImage: `url('${review.image}')` }"></div>
+          <p class="subtitle">{{review.date? new Date(review.date).toLocaleString(): ''}}</p>
           <star-rating :inline="true" :star-size="20" :read-only="true" :show-rating="false" v-model="review.rating"></star-rating> {{review.rating}}
+          <p class="subtitle">{{review.beer}}</p>
+          <div class="comment">
+            <p class="subtitle">{{review.comment}}</p>
+          </div>
         </div>
 
+        <b-modal :active.sync="isModalOpen" :width="640">
+            <div class="card">
+              <div class="review-detail-beer-img" :style="{ backgroundImage: `url('${review.image}')` }"></div>
+              <div class="card-content">
+                  <div class="media">
+                      <div class="media-content">                      
+                          <p class="title is-4">{{review.beer}}</p>
+                          <p class="subtitle is-6"><star-rating :inline="true" :star-size="20" :read-only="true" :show-rating="false" v-model="review.rating"></star-rating> {{review.rating}}</p>
+                      </div>
+                  </div>
 
-
-        <!-- <div class="column is-one-third" >
-
-          <article class="tile is-child notification">
-          <p class="title">{{review.beer}}</p>
-          <p class="subtitle">{{review.coment}}</p>
-          <figure class="image is-4by3">
-           <img :src="review.image" alt="Placeholder image">
-          </figure>
-        </article> -->
-          
-        
-      </div>
-    </section>
-    
-  </div>
+                  <div class="content">
+                      {{review.comment}}
+                  </div>
+              </div>
+            </div>
+        </b-modal>
+    </div>
+  </section>
+</div>
 </template>
 
 
@@ -54,14 +61,28 @@
   background-color: hsl(0, 0%, 98%);
 }
 
-.beer-img {
+.comment {
+    height: 90px; /* new */
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;    
+    margin: 0; 
+}
+
+.review-beer-img {
+  height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.review-detail-beer-img {
   height: 400px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
 }
 </style>
-
 
 <script>
 import { db } from '../firebase/';
@@ -77,6 +98,12 @@ pastas firebase
 
 export default {
   name: 'reviews',
+  data() {
+    return {
+      isModalOpen: false,
+      review: {}
+    }
+  },
   firebase: {
     reviews: {
       source: db.ref('reviews'),
@@ -90,6 +117,12 @@ export default {
         // https://firebase.google.com/docs/reference/js/firebase.database.Reference#remove
         this.$firebaseRefs.reviews.child(review['.key']).remove();
       }
+    }
+  },
+  methods: {
+    loadComments: function(review) {
+      this.isModalOpen = true;
+      this.review = review;
     }
   },
   components: {

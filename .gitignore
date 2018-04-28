@@ -19,3 +19,4 @@ config/dev.env.js
 *.njsproj
 *.sln
 config/dev.env.js
+DESC.md
