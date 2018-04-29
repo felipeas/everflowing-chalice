@@ -1,53 +1,66 @@
  
 <template>
   <div>
-    <section class="hero">
+    <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
-          <p class="title">avaliação</p> <p class="subtitle">nova avaliação</p>
+          <p class="title">Avaliação</p> <p class="subtitle">Nova avaliação</p>
         </div>
       </div>
-      
     </section>
-    <section class="container">
-     
-      <b-field label="escolha a cerveja que deseja avaliar">
-          <b-autocomplete
-          field="name"
-              v-model="review.beer"
-              :data="filteredDataArray"
-              placeholder="pesquise pelo nome da cerveja"
-              icon="magnify"
-              @select="option => selected = option">
-              <template slot="empty">cerveja não encontrada</template>
-          </b-autocomplete>
-      </b-field>
 
-      <b-field>
-        <star-rating class="has-text-centered" v-model="review.rating"></star-rating>
-      </b-field>
+    <section class="hero">
+      <div class="hero-body">
+        <b-field label="">
+        </b-field>
+        <b-field label="">
+            <b-autocomplete
+            field="name"
+                v-model="review.beer"
+                :data="filteredDataArray"
+                placeholder="Pesquise pela cervejaria ou pelo nome da cerveja"
+                icon="magnify"
+                @select="option => selected = option">
+                <template slot="empty">Cerveja não encontrada</template>
+            </b-autocomplete>
+        </b-field>
 
-      <b-field>
-        <button class="button is-primary" @click="onPickFile">selecionar foto</button>
-        <input 
-          type="file" 
-          style="display:none" 
-          ref="fileInput" 
-          accept="image/*"
-          @change="onFilePicked"
-        />
-      </b-field>
+        <b-field>
+          <star-rating class="has-text-centered" v-model="review.rating"></star-rating>
+        </b-field>
 
-      <b-field>
-        <img :src="review.image" style="height:200px">
-      </b-field>
+        <b-field>
+          <button class="button is-primary" @click="onPickFile">selecionar foto</button>
+          <input 
+            type="file" 
+            style="display:none" 
+            ref="fileInput" 
+            accept="image/*"
+            @change="onFilePicked"
+          />
+        </b-field>
 
-      <b-field label="comentário">
-        <b-input type="text" v-model="review.comment" placeholder="escreva seu comentário"/>
-      </b-field>
-      <b-field>
-        <button class="button is-primary" v-on:click="addReview">adicionar</button>
-      </b-field>
+        <b-field>
+          <img :src="review.image" style="height:200px">
+        </b-field>
+
+        <b-field>
+          <b-input type="textarea" v-model="review.comment" placeholder="Escreva seu comentário"/>
+        </b-field>
+
+        <nav class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <button class="button is-info" v-on:click="addReview">Adicionar</button>
+            </div>
+            <div class="level-item">
+              <router-link class="button is-danger" to="/reviews">Cancelar</router-link>
+            </div>
+          </div>
+        </nav>
+          
+        <b-loading :is-full-page="isFullPage" :active.sync="isLoading" :canCancel="false"></b-loading>
+      </div>
     </section>
   </div>
 </template>
@@ -77,7 +90,8 @@ export default {
       },
       beer: '',
       selected: null,
-      image: null
+      image: null,
+      isLoading: false
     };
   },
 
@@ -95,7 +109,7 @@ export default {
     filteredDataArray: function() {
       const names = this.beers.map(b => {
         console.log(b);
-        return { name: b.name, key: b['.key'], author: '' };
+        return { name: b.brewery + ' - ' + b.name, key: b['.key'], author: '' };
       });
 
       return names.filter(option => {
@@ -119,8 +133,11 @@ export default {
         beer: this.review.beer,
         bid: this.selected.key,
         uid: firebase.auth().currentUser.uid,
-        date: new Date().getTime()
+        date: new Date().getTime(),
+        comments: []
       };
+      const self = this;
+      self.isLoading = true;
 
       const img = this.image;
       const reviewsRef = this.$firebaseRefs.reviews;
@@ -141,12 +158,9 @@ export default {
         .then(imageUp => {
           const image = imageUp.metadata.downloadURLs[0];
           reviewsRef.child(key).update({ image: image });
+          self.isLoading = false;
           this.$router.replace('reviews');
         });
-
-      this.review.name = '';
-      this.review.comment = '';
-      this.review.uid = 0;
     },
     removeReview: function(review) {
       // https://firebase.google.com/docs/reference/js/firebase.database.Reference#remove

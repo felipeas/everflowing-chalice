@@ -1,29 +1,19 @@
 <template>
   <section>
-    <section class="hero">
-        <div class="hero-body">
-          <div class="container">
-            <p class="title">cervejas</p> <p class="subtitle">cadastro de cervejas</p>
-          </div>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <p class="title">Cervejas</p> <p class="subtitle">Listagem de cervejas</p>
         </div>
+      </div>
     </section>
     <section class="container">
-      <b-field label="nome">
-        <b-input type="text" v-model="beer.name" placeholder="nova cerveja"/>
-      </b-field>
-      <b-field label="cervejaria">
-        <b-input type="text" v-model="beer.brewery" placeholder="cervejaria"/>
-      </b-field>
-      <b-field>
-        <button class="button is-primary" v-on:click="addBeer">adicionar</button>
-      </b-field>
-      
-      <table class="table is-narrow is-hoverable is-fullwidth">
+      <table class="table is-hoverable is-fullwidth">
         <thead>
           <tr>
-            <th>nome</th>
-            <th>cervejaria</th>
-            <th>ação</th>
+            <th>Nome</th>
+            <th>Cervejaria</th>
+            <th>Ação</th>
           </tr>
         </thead>
         <tbody>
@@ -31,11 +21,37 @@
             <td>{{ beer.name }}</td>
             <td>{{ beer.brewery }}</td>
             <td>
-              <a v-on:click="removeBeer(beer)" class="delete is-medium"></a>
+              <a 
+                v-if="beer.uid == uid" 
+                v-on:click="removeBeer(beer)" 
+                class="delete is-medium">
+              </a>
             </td>
           </tr>
         </tbody>
       </table>
+    </section>
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <p class="subtitle">Cadastrar uma nova cerveja</p>
+          <b-field label="">
+            <b-input type="text" v-model="beer.name" placeholder="nome da cerveja"/>
+          </b-field>
+          <b-field label="">
+            <b-input type="text" v-model="beer.brewery" placeholder="nome da cervejaria"/>
+          </b-field>
+      
+          <nav class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <button class="button is-primary is-inverted" v-on:click="addBeer">Adicionar</button>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
     </section>
   </section>
 </template>
@@ -47,7 +63,10 @@ export default {
   name: 'beers',
   data: function() {
     console.log(this);
-    return { beer: { name: '', brewery: '', uid: '' } };
+    return {
+      beer: { name: '', brewery: '', uid: '' },
+      uid: firebase.auth().currentUser.uid
+    };
   },
   firebase: {
     beers: {
