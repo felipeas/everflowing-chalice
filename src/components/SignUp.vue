@@ -26,19 +26,25 @@
 
 <script>
 import firebase from 'firebase';
+
 export default {
   name: 'signUp',
   data: function() {
     return {
       email: '',
-      password: ''
+      password: '',
+      cpassword: ''
     };
   },
   methods: {
-    submit: function() {
+    submit() {
       this.$refs.form.submit();
     },
-    signUp: function() {
+    signUp() {
+      if (this.password !== this.cpassword) {
+        alert('Oops. Senhas não conferem');
+        return;
+      }
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
@@ -47,7 +53,7 @@ export default {
             this.$router.replace('reviews');
           },
           err => {
-            this.$toast('Oops. ' + err.message);
+            alert('Oops. ' + err.message);
           }
         );
     }

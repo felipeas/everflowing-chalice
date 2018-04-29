@@ -34,8 +34,6 @@ export default {
       this.$refs.form.submit();
     },
     signIn() {
-      const comp = this;
-
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
