@@ -1,6 +1,4 @@
 <template>
-  
-
     <section class="hero is-primary is-fluid">
     <h2 class="title">Criar conta</h2>
     <h2 class="subtitle">Preencha os dados abaixo</h2>
