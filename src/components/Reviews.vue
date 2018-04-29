@@ -1,29 +1,22 @@
 <template>
 <div>
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container">
-        <router-link class="button is-primary" to="/new-review">adicionar avaliação</router-link>
-      </div>
-    </div>    
-  </section>
   <section class="hero is-primary">
     <div class="hero-body">
       <div class="container">
-        <p class="title">todas avaliações</p> <p class="subtitle">cervejas de todo brasil</p>
+        <p class="title">Todas avaliações</p> <p class="subtitle">As mais diversas cervejas de todo mundo</p>
       </div>
     </div>
   </section>
-  <section class="container is-fluid">
-    <div class="columns is-multiline">
+  <section class="container is-fluid is-centered">
+    <div class="columns is-multiline is-centered">
         <div
           class="column is-one-quarter-desktop review" 
-          v-for="review in reviews" 
+          v-for="review in sortedList" 
           v-bind:key="review['.key']"
           v-on:click="loadComments(review)"
         >
           <div class="review-beer-img" :style="{ backgroundImage: `url('${review.image}')` }"></div>
-          <p class="subtitle">{{review.date? new Date(review.date).toLocaleString(): ''}}</p>
+          <p class="subtitle">{{review.date? new Date(review.date).toLocaleString('pt-BR'): ''}}</p>
           <star-rating :inline="true" :star-size="20" :read-only="true" :show-rating="false" v-model="review.rating"></star-rating> {{review.rating}}
           <p class="subtitle">{{review.beer}}</p>
           <div class="comment">
@@ -31,42 +24,67 @@
           </div>
         </div>
 
-        <b-modal :active.sync="isModalOpen" :width="640">
-            <div class="card">
-              <div class="review-detail-beer-img" :style="{ backgroundImage: `url('${review.image}')` }"></div>
-              <div class="card-content">
-                  <div class="media">
-                      <div class="media-content">                      
-                          <p class="title is-4">{{review.beer}}</p>
-                          <p class="subtitle is-6"><star-rating :inline="true" :star-size="20" :read-only="true" :show-rating="false" v-model="review.rating"></star-rating> {{review.rating}}</p>
-                      </div>
-                  </div>
+        <b-modal :active.sync="isModalOpen" :width="960" scroll="keep">
+            <div class="">
+              <div class="card post">
+                <div class="review-detail-beer-img" :style="{ backgroundImage: `url('${review.image}')` }"></div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">                      
+                            <p class="title is-4">{{review.beer}}</p>
+                            <p class="subtitle is-6"><star-rating :inline="true" :star-size="20" :read-only="true" :show-rating="false" v-model="review.rating"></star-rating> {{review.rating}}</p>
+                        </div>
+                    </div>
 
-                  <div class="content">
-                      {{review.comment}}
-                  </div>
+                    <div class="content">
+                        {{review.comment}}
+                    </div>
+                    
+                </div>
               </div>
+              
+              <comments className="comments" :review="review['.key']"/>
             </div>
         </b-modal>
     </div>
   </section>
+
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <div class="container">
+        <p class="title">Não encontrou a avaliação que procurava? </p>
+        <p class="subtitle">Cadastre agora mesmo a sua!</p>
+        <router-link class="button is-primary is-inverted" to="/new-review">Adicionar avaliação</router-link>
+      </div>
+    </div>    
+  </section>
 </div>
 </template>
 
-
-
 <style scoped>
 .review {
-  margin-top: 30px;
-  background-color: hsl(0, 0%, 98%);
+  padding: 16px;
+  margin: 16px;
 }
 
+.modal-review {
+  padding-right: 325px;
+  width: 960px;
+}
+
+.post {
+  width: 640px;
+}
+
+.comments {
+  width: 320px;
+}
 .comment {
-    height: 90px; /* new */
-    overflow: hidden;
-    display: inline-block;
-    text-overflow: ellipsis;    
-    margin: 0; 
+  height: 150px;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  margin: 0;
 }
 
 .review-beer-img {
@@ -87,6 +105,7 @@
 <script>
 import { db } from '../firebase/';
 import StarRating from 'vue-star-rating';
+import Comments from '@/components/Comments';
 
 /*\
 pastas firebase
@@ -102,7 +121,7 @@ export default {
     return {
       isModalOpen: false,
       review: {}
-    }
+    };
   },
   firebase: {
     reviews: {
@@ -119,6 +138,15 @@ export default {
       }
     }
   },
+  computed: {
+    // a computed getter
+    sortedList: function() {
+      // `this` points to the vm instance
+      return this.reviews.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+    }
+  },
   methods: {
     loadComments: function(review) {
       this.isModalOpen = true;
@@ -126,7 +154,8 @@ export default {
     }
   },
   components: {
-    StarRating
+    StarRating,
+    Comments
   }
 };
 </script>
