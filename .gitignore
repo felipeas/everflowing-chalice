@@ -7,7 +7,7 @@ yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
 selenium-debug.log
-config/dev.env.js
+
 
 # Editor directories and files
 .env.local
@@ -18,5 +18,5 @@ config/dev.env.js
 *.ntvs*
 *.njsproj
 *.sln
-config/dev.env.js
-DESC.md
+
+
