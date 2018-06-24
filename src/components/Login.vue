@@ -18,11 +18,7 @@
       </button>
       <br>
       <br>      
-      <button class="button is-inverted" v-on:click="gitHubSignIn">
-          <b-icon icon="github-circle"></b-icon>
-          <span>Entrar com o Github</span>
-      </button>
-      <br>
+     
       <br>
       <p>Outras opções: </p>
       <router-link class="button is-success" to="/sign-up">Criar uma conta agora </router-link>
@@ -66,7 +62,8 @@ export default {
         var token = result.credential.accessToken;
         var user = result.user;
         console.log(user);
-        this.$toast.open('Entrou' + JSON.stringify(user, null, 2));
+        this.$toast.open('Entrou');
+        console.log(user);
         this.$router.replace('reviews');
         // ...
       }).catch( err => {

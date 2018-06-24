@@ -15,9 +15,9 @@
       <div id="mainNav" class="navbar-menu is-primary color-fix" :class="{'is-active': navIsActive}">
         <div class="navbar-start">
           <!-- <router-link class="navbar-item is-hoverable" to="/breweries">cervejarias</router-link> -->
-          <router-link class="navbar-item has-text-white-ter is-hoverable" to="/beers">Cervejas</router-link>
-          <router-link class="navbar-item has-text-white-ter is-hoverable" to="/reviews">Avaliações</router-link>
-          <router-link class="navbar-item has-text-white-ter is-hoverable" to="/forum">Forum</router-link>
+          <router-link v-on:click.native="toggleMenu" class="navbar-item has-text-white-ter is-hoverable" to="/beers">Cervejas</router-link>
+          <router-link v-on:click.native="toggleMenu" class="navbar-item has-text-white-ter is-hoverable" to="/reviews">Avaliações</router-link>
+          <router-link v-on:click.native="toggleMenu" class="navbar-item has-text-white-ter is-hoverable" to="/forum">Forum</router-link>
         </div>
 
         <div class="navbar-end">
@@ -27,7 +27,7 @@
                 <a class="navbar-item has-text-white-ter" v-on:click="signOut">Sair</a>
               </div>
             </div>
-            <router-link v-else class="navbar-item is-hoverable" to="/login">Entrar</router-link>
+            <router-link v-else v-on:click.native="toggleMenu" class="navbar-item is-hoverable" to="/login">Entrar</router-link>
         </div>
       </div>
     </div>
@@ -78,6 +78,7 @@ export default {
             this.$toast('Oops. ' + err.message);
           }
         );
+      this.toggleMenu();
     }
   }
 };
