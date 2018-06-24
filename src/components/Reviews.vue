@@ -39,10 +39,8 @@
                     <div class="content">
                         {{review.comment}}
                     </div>
-                    
                 </div>
               </div>
-              
               <comments className="comments" :review="review['.key']"/>
             </div>
         </b-modal>

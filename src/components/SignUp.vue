@@ -2,7 +2,7 @@
     <section class="hero is-primary is-fluid">
     <h2 class="title">Criar conta</h2>
     <h2 class="subtitle">Preencha os dados abaixo</h2>
-    <form class="hero-body" ref="form">
+    <form class="hero-body container" ref="form">
       <b-field>
         <b-input type="text" v-model="email" placeholder="email"/>
       </b-field>

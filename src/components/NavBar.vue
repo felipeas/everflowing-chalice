@@ -17,6 +17,7 @@
           <!-- <router-link class="navbar-item is-hoverable" to="/breweries">cervejarias</router-link> -->
           <router-link class="navbar-item has-text-white-ter is-hoverable" to="/beers">Cervejas</router-link>
           <router-link class="navbar-item has-text-white-ter is-hoverable" to="/reviews">Avaliações</router-link>
+          <router-link class="navbar-item has-text-white-ter is-hoverable" to="/forum">Forum</router-link>
         </div>
 
         <div class="navbar-end">
