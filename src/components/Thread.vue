@@ -76,10 +76,10 @@
 </template>
 <style>
 .thread {
-  margin: 32px;
+  margin: 16px;
 }
 .reply, .reply-box {
-  padding-left: 64px;
+  padding-left: 32px;
 }
 
 </style>
